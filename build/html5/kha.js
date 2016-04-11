@@ -38,22 +38,21 @@ EReg.prototype = {
 var Game = function() {
 	kha_System.notifyOnRender($bind(this,this.render));
 	kha_Scheduler.addTimeTask($bind(this,this.update),0,0.0166666666666666664);
-	this.state = new MenuState();
+	Game.state = new MenuState();
 };
 $hxClasses["Game"] = Game;
 Game.__name__ = true;
+Game.switchState = function(newstate) {
+	Game.state.destroy();
+	Game.state = newstate;
+	Game.state.create();
+};
 Game.prototype = {
-	state: null
-	,update: function() {
-		this.state.update();
+	update: function() {
+		Game.state.update();
 	}
 	,render: function(framebuffer) {
-		this.state.render(framebuffer);
-	}
-	,switchState: function(state) {
-		this.state.destroy();
-		this.state = state;
-		this.state.create();
+		Game.state.render(framebuffer);
 	}
 	,__class__: Game
 };
@@ -233,17 +232,20 @@ MenuState.__super__ = State;
 MenuState.prototype = $extend(State.prototype,{
 	create: function() {
 		State.prototype.create.call(this);
-		haxe_Log.trace("Creating Menu State",{ fileName : "MenuState.hx", lineNumber : 19, className : "MenuState", methodName : "create"});
+		haxe_Log.trace("Creating Menu State",{ fileName : "MenuState.hx", lineNumber : 18, className : "MenuState", methodName : "create"});
 		if(kha_input_Mouse.get() != null) {
 			kha_input_Mouse.get().notify($bind(this,this.onMouseDown),null,null,null);
 		}
-		MenuState.game.switchState(new PlayState());
 	}
 	,onMouseDown: function(button,x,y) {
+		if(button == 0) {
+			Game.switchState(new PlayState());
+		}
 	}
 	,destroy: function() {
 		State.prototype.destroy.call(this);
-		haxe_Log.trace("Destroying Menu State",{ fileName : "MenuState.hx", lineNumber : 36, className : "MenuState", methodName : "destroy"});
+		haxe_Log.trace("Destroying Menu State",{ fileName : "MenuState.hx", lineNumber : 35, className : "MenuState", methodName : "destroy"});
+		kha_input_Mouse.get().remove($bind(this,this.onMouseDown),null,null,null);
 	}
 	,update: function() {
 		State.prototype.update.call(this);

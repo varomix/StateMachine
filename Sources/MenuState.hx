@@ -5,7 +5,6 @@ import kha.input.Mouse;
 import kha.Assets;
 
 class MenuState extends State {
-	static public var game : Game;
 
 	public function new()
 	{
@@ -24,7 +23,7 @@ class MenuState extends State {
 
 	public function onMouseDown(button:Int, x:Int, y:Int):Void {
 		if (button == 0){
-			game.switchState(new PlayState());  /// THIS doesn't work, why?
+			Game.switchState(new PlayState());  /// THIS doesn't work, why?
 		}
 	}
 	   
@@ -34,6 +33,8 @@ class MenuState extends State {
 	{
 	    super.destroy();
 	    trace("Destroying Menu State");
+	    // remove mouse listener
+	    Mouse.get().remove(onMouseDown, null, null, null);
 	}
 
 	override public function update()

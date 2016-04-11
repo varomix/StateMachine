@@ -5,7 +5,7 @@ import kha.Scheduler;
 import kha.System;
 
 class Game {
-	public var state:State;
+	public static var state:State;
 
 	public function new() {
 		System.notifyOnRender(render);
@@ -24,11 +24,11 @@ class Game {
 		state.render(framebuffer);	
 	}
 
-	public function switchState(state:State)
+	public static function switchState(newstate:State)
 	{
-		this.state.destroy();
-		this.state = state;
-		this.state.create();
+		state.destroy();
+		state = newstate;
+		state.create();
 	    
 	}
 }
